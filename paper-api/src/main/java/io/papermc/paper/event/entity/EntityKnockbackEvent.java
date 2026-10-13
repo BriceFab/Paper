@@ -1,6 +1,7 @@
 package io.papermc.paper.event.entity;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -8,6 +9,7 @@ import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when an entity receives knockback.
@@ -20,14 +22,16 @@ public class EntityKnockbackEvent extends EntityEvent implements Cancellable {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private final Cause cause;
+    private final @Nullable DamageSource damageSource;
     protected Vector knockback;
     private boolean cancelled;
 
     @ApiStatus.Internal
-    public EntityKnockbackEvent(final Entity entity, final EntityKnockbackEvent.Cause cause, final Vector knockback) {
+    public EntityKnockbackEvent(final Entity entity, final EntityKnockbackEvent.Cause cause, final Vector knockback, final @Nullable DamageSource damageSource) {
         super(entity);
         this.cause = cause;
         this.knockback = knockback;
+        this.damageSource = damageSource;
     }
 
     /**
@@ -37,6 +41,18 @@ public class EntityKnockbackEvent extends EntityEvent implements Cancellable {
      */
     public EntityKnockbackEvent.Cause getCause() {
         return this.cause;
+    }
+
+    /**
+     * Gets the damage source associated with this knockback, if any.
+     * <p>
+     * This is {@code null} for knockback that is not tied to a damage source,
+     * such as a {@link Cause#PUSH}.
+     *
+     * @return the damage source, or {@code null} if there is none
+     */
+    public @Nullable DamageSource getDamageSource() {
+        return this.damageSource;
     }
 
     /**

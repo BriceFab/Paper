@@ -110,7 +110,7 @@
 +                        // CraftBukkit start - Call EntityKnockbackEvent
 +                        if (entity instanceof LivingEntity livingEntity) {
 +                            // Paper start - knockback events
-+                            io.papermc.paper.event.entity.EntityKnockbackEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityKnockbackEvent(livingEntity.getBukkitEntity(), this.source, this.damageSource.getEntity() != null ? this.damageSource.getEntity() : this.source, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.EXPLOSION, knockbackPower, knockback);
++                            io.papermc.paper.event.entity.EntityKnockbackEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityKnockbackEvent(livingEntity.getBukkitEntity(), this.source, this.damageSource.getEntity() != null ? this.damageSource.getEntity() : this.source, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.EXPLOSION, knockbackPower, knockback, this.damageSource);
 +                            knockback = event.isCancelled() ? Vec3.ZERO : org.bukkit.craftbukkit.util.CraftVector.toVec3(event.getKnockback());
 +                            // Paper end - knockback events
 +                        }

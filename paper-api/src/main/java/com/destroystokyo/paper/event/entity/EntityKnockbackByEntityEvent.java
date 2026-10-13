@@ -2,11 +2,13 @@ package com.destroystokyo.paper.event.entity;
 
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Fired when an Entity is knocked back by the hit of another Entity. The acceleration
@@ -18,8 +20,8 @@ public class EntityKnockbackByEntityEvent extends EntityPushedByEntityAttackEven
     private final float knockbackStrength;
 
     @ApiStatus.Internal
-    public EntityKnockbackByEntityEvent(final LivingEntity entity, final Entity hitBy, final EntityKnockbackEvent.Cause cause, final float knockbackStrength, final Vector knockback) {
-        super(entity, cause, hitBy, knockback);
+    public EntityKnockbackByEntityEvent(final LivingEntity entity, final Entity hitBy, final EntityKnockbackEvent.Cause cause, final float knockbackStrength, final Vector knockback, final @Nullable DamageSource damageSource) {
+        super(entity, cause, hitBy, knockback, damageSource);
         this.knockbackStrength = knockbackStrength;
     }
 

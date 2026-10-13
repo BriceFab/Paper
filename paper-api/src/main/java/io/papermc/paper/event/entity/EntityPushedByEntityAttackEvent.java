@@ -1,10 +1,12 @@
 package io.papermc.paper.event.entity;
 
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Fired when an entity is pushed by another entity's attack. The acceleration vector can be
@@ -20,7 +22,12 @@ public class EntityPushedByEntityAttackEvent extends EntityKnockbackEvent {
 
     @ApiStatus.Internal
     public EntityPushedByEntityAttackEvent(final Entity entity, final EntityKnockbackEvent.Cause cause, final Entity pushedBy, final Vector knockback) {
-        super(entity, cause, knockback);
+        this(entity, cause, pushedBy, knockback, null);
+    }
+
+    @ApiStatus.Internal
+    public EntityPushedByEntityAttackEvent(final Entity entity, final EntityKnockbackEvent.Cause cause, final Entity pushedBy, final Vector knockback, final @Nullable DamageSource damageSource) {
+        super(entity, cause, knockback, damageSource);
         this.pushedBy = pushedBy;
     }
 
