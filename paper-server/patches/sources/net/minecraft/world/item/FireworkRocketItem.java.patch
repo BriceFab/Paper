@@ -18,7 +18,7 @@
              );
 -            itemStack.shrink(1);
 +            // Paper start - PlayerLaunchProjectileEvent
-+            com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) context.getPlayer().getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitMirror(itemStack), (org.bukkit.entity.Firework) fireworkRocketEntity.projectile().getBukkitEntity());
++            com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) context.getPlayer().getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitMirror(itemStack), (org.bukkit.entity.Firework) fireworkRocketEntity.projectile().getBukkitEntity(), org.bukkit.craftbukkit.CraftEquipmentSlot.getHand(context.getHand()));
 +            if (!event.callEvent() || !fireworkRocketEntity.attemptSpawn()) return InteractionResult.PASS;
 +            if (event.shouldConsume() && !context.getPlayer().hasInfiniteMaterials()) itemStack.shrink(1);
 +            else context.getPlayer().containerMenu.forceHeldSlot(context.getHand());

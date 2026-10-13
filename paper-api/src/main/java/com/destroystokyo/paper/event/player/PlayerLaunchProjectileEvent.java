@@ -6,6 +6,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
@@ -24,15 +25,17 @@ public class PlayerLaunchProjectileEvent extends PlayerEvent implements Cancella
 
     private final Projectile projectile;
     private final ItemStack itemStack;
+    private final EquipmentSlot hand;
     private boolean consumeItem = true;
 
     private boolean cancelled;
 
     @ApiStatus.Internal
-    public PlayerLaunchProjectileEvent(final Player shooter, final ItemStack itemStack, final Projectile projectile) {
+    public PlayerLaunchProjectileEvent(final Player shooter, final ItemStack itemStack, final Projectile projectile, final EquipmentSlot hand) {
         super(shooter);
         this.itemStack = itemStack;
         this.projectile = projectile;
+        this.hand = hand;
     }
 
     /**
@@ -51,6 +54,15 @@ public class PlayerLaunchProjectileEvent extends PlayerEvent implements Cancella
      */
     public ItemStack getItemStack() {
         return this.itemStack;
+    }
+
+    /**
+     * Get the hand holding the ItemStack used to fire the projectile.
+     *
+     * @return the hand, either {@link EquipmentSlot#HAND} or {@link EquipmentSlot#OFF_HAND}
+     */
+    public EquipmentSlot getHand() {
+        return this.hand;
     }
 
     /**
