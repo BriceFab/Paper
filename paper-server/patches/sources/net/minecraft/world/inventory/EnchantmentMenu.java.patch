@@ -107,7 +107,7 @@
                      this.broadcastChanges();
                  });
              } else {
-@@ -148,19 +_,52 @@
+@@ -148,20 +_,59 @@
              }
  
              this.access.execute((level, pos) -> {
@@ -129,12 +129,19 @@
 +                    if (holder == null) return;
 +                    org.bukkit.enchantments.Enchantment hintedEnchantment = org.bukkit.craftbukkit.enchantments.CraftEnchantment.minecraftHolderToBukkit(holder);
 +                    int hintedEnchantmentLevel = this.levelClue[buttonId];
-+                    org.bukkit.event.enchantment.EnchantItemEvent event = new org.bukkit.event.enchantment.EnchantItemEvent((org.bukkit.entity.Player) player.getBukkitEntity(), this.getBukkitView(), this.access.getLocation().getBlock(), craftItemStack, this.costs[buttonId], enchants, hintedEnchantment, hintedEnchantmentLevel, buttonId);
++                    org.bukkit.event.enchantment.EnchantItemEvent event = new org.bukkit.event.enchantment.EnchantItemEvent((org.bukkit.entity.Player) player.getBukkitEntity(), this.getBukkitView(), this.access.getLocation().getBlock(), craftItemStack, this.costs[buttonId], enchants, hintedEnchantment, hintedEnchantmentLevel, buttonId, enchantmentCost, enchantmentCost); // Paper - expose charged levels and lapis cost
 +                    level.getCraftServer().getPluginManager().callEvent(event);
 +                    int itemLevel = event.getExpLevelCost();
 +                    if (event.isCancelled() || (itemLevel > player.experienceLevel && !player.getAbilities().instabuild) || event.getEnchantsToAdd().isEmpty()) {
 +                        return;
 +                    }
++                    // Paper start - expose charged levels and lapis cost
++                    final int expLevelsCharged = event.getExpLevelsCharged();
++                    final int lapisCost = event.getLapisCost();
++                    if ((expLevelsCharged > player.experienceLevel || lapisCost > currency.getCount()) && !player.hasInfiniteMaterials()) {
++                        return;
++                    }
++                    // Paper end - expose charged levels and lapis cost
 +                    // CraftBukkit end
 +                    // Paper start
 +                    enchantmentItem = org.bukkit.craftbukkit.inventory.CraftItemStack.getOrCloneOnMutation(craftItemStack, event.getItem());
@@ -160,13 +167,14 @@
 +
 +                        enchantmentItem.enchant(enchantment, entry.getValue());
                      }
-+                    player.onEnchantmentPerformed(enchantmentItem, enchantmentCost);
++                    player.onEnchantmentPerformed(enchantmentItem, expLevelsCharged); // Paper - expose charged levels and lapis cost
 +                    // CraftBukkit end
  
-+                    // CraftBukkit - TODO: let plugins change this
-                     currency.consume(enchantmentCost, player);
+-                    currency.consume(enchantmentCost, player);
++                    currency.consume(lapisCost, player); // Paper - expose charged levels and lapis cost
                      if (currency.isEmpty()) {
                          this.enchantSlots.setItem(1, ItemStack.EMPTY);
+                     }
 @@ -204,6 +_,12 @@
          return goldStack.isEmpty() ? 0 : goldStack.getCount();
      }

@@ -30,11 +30,13 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
     private final Enchantment enchantmentHint;
     private final int levelHint;
     private final int button;
+    private int expLevelsCharged;
+    private int lapisCost;
 
     private boolean cancelled;
 
     @ApiStatus.Internal
-    public EnchantItemEvent(@NotNull final Player enchanter, @NotNull final InventoryView view, @NotNull final Block table, @NotNull final ItemStack item, final int level, @NotNull final Map<Enchantment, Integer> enchants, @NotNull final Enchantment enchantmentHint, final int levelHint, final int button) {
+    public EnchantItemEvent(@NotNull final Player enchanter, @NotNull final InventoryView view, @NotNull final Block table, @NotNull final ItemStack item, final int level, @NotNull final Map<Enchantment, Integer> enchants, @NotNull final Enchantment enchantmentHint, final int levelHint, final int button, final int expLevelsCharged, final int lapisCost) {
         super(view);
         this.enchanter = enchanter;
         this.table = table;
@@ -44,6 +46,8 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
         this.enchantmentHint = enchantmentHint;
         this.levelHint = levelHint;
         this.button = button;
+        this.expLevelsCharged = expLevelsCharged;
+        this.lapisCost = lapisCost;
     }
 
     /**
@@ -103,6 +107,53 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
         Preconditions.checkArgument(level > 0, "The cost must be greater than 0!");
 
         this.level = level;
+    }
+
+    /**
+     * Gets the amount of experience levels that will be taken from the
+     * enchanter.
+     * <p>
+     * This is separate from {@link #getExpLevelCost()}, which is only the
+     * minimum level required to select the offer.
+     *
+     * @return experience levels to take
+     */
+    public int getExpLevelsCharged() {
+        return this.expLevelsCharged;
+    }
+
+    /**
+     * Sets the amount of experience levels that will be taken from the
+     * enchanter. The enchantment fails if the enchanter has fewer levels,
+     * unless they have infinite materials.
+     *
+     * @param expLevelsCharged experience levels to take
+     */
+    public void setExpLevelsCharged(final int expLevelsCharged) {
+        Preconditions.checkArgument(expLevelsCharged >= 0, "The experience levels charged must not be negative!");
+        this.expLevelsCharged = expLevelsCharged;
+    }
+
+    /**
+     * Gets the amount of lapis lazuli that will be consumed from the
+     * enchanting table.
+     *
+     * @return amount of lapis lazuli to consume
+     */
+    public int getLapisCost() {
+        return this.lapisCost;
+    }
+
+    /**
+     * Sets the amount of lapis lazuli that will be consumed from the
+     * enchanting table. The enchantment fails if the table holds less,
+     * unless the enchanter has infinite materials.
+     *
+     * @param lapisCost amount of lapis lazuli to consume
+     */
+    public void setLapisCost(final int lapisCost) {
+        Preconditions.checkArgument(lapisCost >= 0, "The lapis cost must not be negative!");
+        this.lapisCost = lapisCost;
     }
 
     /**
